@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 
 export function useTriviaData(amount = 50) {
-  const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [triviaQuestions, setTriviaQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     fetch(`https://opentdb.com/api.php?amount=${amount}&type=multiple`)
-      .then(res => res.json())
+      .then(response => response.json())
       .then(data => {
-        setQuestions(data.results || []);
-        setError(null);
+        setTriviaQuestions(data.results || []);
+        setFetchError(null);
       })
-      .catch(err => {
-        setError(err);
-        setQuestions([]);
+      .catch(error => {
+        setFetchError(error);
+        setTriviaQuestions([]);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, [amount]);
 
-  return { questions, loading, error };
+  return { triviaQuestions, isLoading, fetchError };
 }

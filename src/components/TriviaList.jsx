@@ -1,21 +1,12 @@
-import { useTriviaData } from "../hooks/useTriviaData";
+import { decodeHtml } from "../utils/decodeHtml";
 
-function decodeHtml(html) {
-  const txt = document.createElement("textarea");
-  txt.innerHTML = html;
-  return txt.value;
-}
-
-export default function TriviaList() {
-  const { questions, loading, error } = useTriviaData(50);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Failed to load trivia.</div>;
-
+export default function TriviaList({ questions }) {
   return (
-    <ul>
+    <ul className="trivia-list" aria-label="Trivia questions">
       {questions.map((q, idx) => (
-        <li key={idx}>{decodeHtml(q.question)}</li>
+        <li key={idx} className="trivia-card">
+          {decodeHtml(q.question)}
+        </li>
       ))}
     </ul>
   );

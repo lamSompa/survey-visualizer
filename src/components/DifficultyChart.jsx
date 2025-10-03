@@ -1,41 +1,34 @@
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
-import { decodeHtml } from "../utils/decodeHtml";
 
-export default function CategoryChart({ questions }) {
-  const stats = {};
+export default function DifficultyChart({ questions }) {
+  const stats = { easy: 0, medium: 0, hard: 0 };
   questions.forEach(q => {
-    stats[q.category] = (stats[q.category] || 0) + 1;
+    stats[q.difficulty] = (stats[q.difficulty] || 0) + 1;
   });
-  const data = Object.entries(stats).map(([category, count]) => ({
-    category: decodeHtml(category),
+  const data = Object.entries(stats).map(([difficulty, count]) => ({
+    difficulty: difficulty.charAt(0).toUpperCase() + difficulty.slice(1),
     count,
   }));
 
-  if (!data.length) return <div>No data to display.</div>;
-
-  const minWidth = Math.min(900, Math.max(700, data.length * 90));
+  if (!data.some(item => item.count > 0)) return <div>No data to display.</div>;
 
   return (
     <figure>
       <figcaption>
-        Bar chart showing the distribution of questions by category.
+        Bar chart showing the distribution of questions by difficulty (Easy, Medium, Hard).
       </figcaption>
-      <div className="chart-scroll" aria-label="Questions by category">
-        <div style={{ minWidth }}>
+      <div style={{ width: "100%", overflowX: "auto" }} aria-label="Questions by difficulty">
+        <div style={{ minWidth: 700 }}>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={data} margin={{ top: 16, right: 32, left: 0, bottom: 32 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#444" />
               <XAxis
-                dataKey="category"
-                tick={{ fill: "#fff", fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}
+                dataKey="difficulty"
+                tick={{ fill: "#fff", fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
                 axisLine={false}
                 tickLine={false}
-                angle={-45}
-                textAnchor="end"
-                interval={0}
-                height={110}
               />
               <YAxis
                 axisLine={{ stroke: "#E62F78" }}
@@ -51,7 +44,7 @@ export default function CategoryChart({ questions }) {
                 }}
                 labelStyle={{ color: "#E62F78", fontWeight: "bold" }}
               />
-              <Bar dataKey="count" fill="#E62F78" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="count" fill="#69D5B1" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
