@@ -1,9 +1,17 @@
 import { decodeHtml } from "../utils/decodeHtml";
 
 export default function TriviaList({ questions }) {
+  const validQuestions = Array.isArray(questions)
+    ? questions.filter(q => q && typeof q.question === "string")
+    : [];
+
+  if (validQuestions.length === 0) {
+    return <div>No results</div>;
+  }
+
   return (
-    <ul className="trivia-list" aria-label="Trivia questions">
-      {questions.map((q, idx) => (
+    <ul aria-label="Trivia questions" className="trivia-list">
+      {validQuestions.map((q, idx) => (
         <li key={idx} className="trivia-card">
           {decodeHtml(q.question)}
         </li>

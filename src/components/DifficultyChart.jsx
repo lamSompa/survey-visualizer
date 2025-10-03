@@ -3,10 +3,14 @@ import {
 } from "recharts";
 
 export default function DifficultyChart({ questions }) {
-  const stats = { easy: 0, medium: 0, hard: 0 };
-  questions.forEach(q => {
+const stats = { easy: 0, medium: 0, hard: 0 };
+questions.forEach((q) => {
+  if (!q || !q.difficulty) return;
+  if (["easy", "medium", "hard"].includes(q.difficulty)) {
     stats[q.difficulty] = (stats[q.difficulty] || 0) + 1;
-  });
+  }
+});
+
   const data = Object.entries(stats).map(([difficulty, count]) => ({
     difficulty: difficulty.charAt(0).toUpperCase() + difficulty.slice(1),
     count,
